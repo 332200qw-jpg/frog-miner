@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="description" content="奶蛙工厂——od厂长的邪恶罐头工厂，蛋蛋帮他抓遍天下奶蛙！">
+<title>奶蛙工厂</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><circle cx='32' cy='34' r='26' fill='%23ffd93d'/><circle cx='22' cy='30' r='6' fill='%23222'/><circle cx='42' cy='30' r='6' fill='%23222'/><circle cx='22' cy='30' r='2.4' fill='%23fff'/><circle cx='42' cy='30' r='2.4' fill='%23fff'/><path d='M20 46 Q32 56 44 46' stroke='%23a9742f' stroke-width='4' fill='none' stroke-linecap='round'/></svg>">
+<link rel="stylesheet" href="css/style.css?v=5">
+</head>
+<body>
+<div class="page">
+  <div class="hud">
+    <div class="hgroup">
+      <div class="stat"><span>分数</span><b id="score">$0</b></div>
+      <div class="stat"><span>目标</span><b id="target">$800</b></div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button id="btnQuit" class="hbtn" type="button">回工厂</button>
+      <button id="btnDexHud" class="hbtn" type="button">奶蛙图鉴</button>
+    </div>
+    <div class="hgroup">
+      <div class="stat" id="timeStat"><span>时间</span><b id="time">45</b></div>
+      <div class="stat"><span>关卡</span><b id="level">1</b></div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button id="btnPause" class="iconbtn" type="button" title="暂停 / 继续">
+        <svg viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" fill="currentColor"/><rect x="14" y="5" width="4" height="14" fill="currentColor"/></svg>
+      </button>
+      <button id="btnSettings" class="iconbtn" type="button" title="设置">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="stage">
+    <canvas id="game" width="800" height="600"></canvas>
+    <img id="sheetImg" src="assets/laugh-sheet2.webp" alt="" style="display:none" aria-hidden="true">
+    <img id="dandanImg" src="assets/dandan-head.webp" alt="" style="display:none" aria-hidden="true">
+    <img id="odImg" src="assets/od-boss.webp" alt="" style="display:none" aria-hidden="true">
+    <img id="diamondIcon" src="assets/diamond-icon.webp" style="display:none" alt="">
+    <img id="odAngryImg" src="assets/od-angry.webp" alt="" style="display:none" aria-hidden="true">
+    <div style="display:none" aria-hidden="true">
+      <img src="assets/frog-rare-1.webp"><img src="assets/frog-rare-2.webp"><img src="assets/frog-rare-3.webp">
+      <img src="assets/frog-rare-4.webp"><img src="assets/frog-rare-5.webp"><img src="assets/frog-rare-6.webp">
+      <img src="assets/frog-rare-7.webp"><img src="assets/frog-rare-8.webp"><img src="assets/frog-rare-9.webp"><img src="assets/frog-rare-10.webp"><img src="assets/frog-rare-11.webp"><img src="assets/frog-rare-12.webp"><img src="assets/frog-rare-13.webp"><img src="assets/frog-rare-14.webp"><img src="assets/frog-rare-15.webp"><img src="assets/frog-rare-16.webp"><img src="assets/frog-rare-17.webp"><img src="assets/frog-rare-18.webp"><img src="assets/frog-rare-19.webp"><img src="assets/frog-rare-20.webp"><img src="assets/frog-rare-21.webp"><img src="assets/frog-rare-22.webp"><img src="assets/frog-rare-23.webp"><img src="assets/frog-rare-24.webp"><img src="assets/frog-rare-25.webp"><img src="assets/frog-rare-26.webp"><img src="assets/frog-rare-27.webp"><img src="assets/frog-rare-28.webp"><img src="assets/frog-rare-29.webp"><img src="assets/frog-rare-30.webp"><img src="assets/frog-rare-31.webp"><img src="assets/frog-rare-32.webp"><img src="assets/frog-rare-33.webp"><img src="assets/frog-rare-34.webp"><img src="assets/frog-rare-35.webp"><img src="assets/frog-rare-36.webp"><img src="assets/frog-rare-37.webp"><img src="assets/frog-rare-38.webp"><img src="assets/frog-rare-39.webp"><img src="assets/frog-rare-40.webp"><img src="assets/frog-rare-41.webp"><img src="assets/frog-rare-42.webp"><img src="assets/frog-rare-43.webp"><img src="assets/frog-rare-44.webp"><img src="assets/frog-rare-45.webp"><img src="assets/frog-rare-46.webp"><img src="assets/frog-rare-47.webp">
+    </div>
+
+    <div id="ovLoading" class="overlay">
+      <div class="card">
+        <h1 style="font-size:26px;">奶蛙工厂</h1>
+        <div class="loadingBox">正在加载<span class="loadingDot"></span><span class="loadingDot"></span><span class="loadingDot"></span></div>
+      </div>
+    </div>
+
+    <div id="ovFactory" class="factoryScreen hidden">
+      <img class="factoryOd" src="assets/od-menu.webp" alt="od厂长">
+            <div class="factoryLeft">
+        <h1 class="factoryTitle">奶蛙工厂</h1>
+        <div id="btnPlay" class="frogBtn" role="button" tabindex="0">
+          <img src="assets/frog-small.webp" alt="开始游戏">
+          <span class="frogBtnLabel">开始游戏</span>
+        </div>
+        <div class="factorySub">
+          <button id="btnIntro" class="smallbtn" type="button">游戏背景</button>
+          <button id="btnDex" class="smallbtn" type="button">奶蛙图鉴</button>
+          <button id="btnBirthday" class="smallbtn" type="button">奶蛙生日</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="ovTeam" class="overlay hidden" style="z-index:25;">
+      <div class="card teamCard">
+        <h1 style="font-size:28px;margin-top:0;">制作组成员</h1>
+        <div class="teamSection">
+          <h2>资产 / 美术</h2>
+          <p><b>开发成员 五典</b></p>
+          <p>GitHub：<a href="https://github.com/66970010-boop" target="_blank" rel="noopener">66970010-boop</a></p>
+          <p>QQ：3254337248</p>
+        </div>
+        <div class="teamSection">
+          <h2>代码 / 维护</h2>
+          <p><b>开发成员 俊俊</b></p>
+          <p>GitHub：<a href="https://github.com/junjunya2020" target="_blank" rel="noopener">junjunya2020</a></p>
+          <p>QQ：1113043123</p>
+        </div>
+        <p class="teamQq">奶蛙工厂交流群：1125745212<br>奶蛙游戏合集群：1125743992</p>
+        <div class="row"><button id="btnTeamClose" class="smallbtn" type="button">关闭</button></div>
+      </div>
+    </div>
+
+    <div id="ovGameSelect" class="overlay hidden" style="background:rgba(22,11,3,.8);">
+      <div class="card" style="max-width:420px;">
+        <h1 style="margin-top:0;">选择游戏</h1>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:16px;">
+          <button id="btnSelMiner" class="bigbtn" type="button" style="font-size:20px;padding:14px 0;">⛏ 奶蛙矿工</button>
+          <button id="btnSelNinja" class="bigbtn" type="button" style="font-size:20px;padding:14px 0;">🔪 奶蛙忍者</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="ovNinja" class="overlay hidden" style="background:rgba(22,11,3,.8);">
+      <div class="card">
+        <h1 style="margin-top:0;">奶蛙忍者</h1>
+        <div class="frogs"><img src="assets/frog-big.webp" style="width:60px;" alt="大奶蛙"><img src="assets/frog-small.webp" style="width:40px;" alt="小奶蛙"></div>
+        <ul class="rules">
+          <li>划动屏幕切开飞来的奶蛙，装进罐头</li>
+          <li>大奶蛙分高，切到会捧腹大笑</li>
+          <li>切到炸弹直接失败！</li>
+          <li>45秒内切到目标分数过关，目标随关卡提高</li>
+        </ul>
+        <button id="btnNinjaStart" class="bigbtn" type="button">开始切奶蛙</button>
+      </div>
+    </div>
+
+    <div id="ovNinjaEnd" class="overlay hidden" style="background:rgba(22,11,3,.85);z-index:30;">
+      <div class="card" style="text-align:center;">
+        <img id="endCanImg" src="assets/can.webp" style="width:180px;filter:drop-shadow(0 0 30px rgba(255,220,100,.9));" alt="黄桃罐头">
+        <div class="laughBox" id="ninjaLaughBox" style="display:none;"></div>
+        <h2 id="endScoreText" style="color:#ffe14d;margin:14px 0 6px;">得分 0</h2>
+        <p style="color:#ffd98a;margin:0 0 16px;" id="endMsg">罐头做好啦！</p>
+        <button id="btnNinjaNext" class="bigbtn" type="button" style="display:none;">下一关</button>
+        <button id="btnNinjaRetry" class="bigbtn" type="button">再来一局</button>
+        <button id="btnNinjaExit" class="smallbtn" type="button" style="margin-top:10px;">返回工厂</button>
+      </div>
+    </div>
+
+    <div id="ovIntro" class="introScreen hidden">
+      <div id="introContent"></div>
+      <div class="introArrow">点击继续 ▶</div>
+    </div>
+
+    <div id="ovBirthday" class="birthdayScreen hidden">
+      <button id="btnBirthdayBack" class="bdayBack" type="button">返回原版游戏</button>
+      <div id="birthdayStory" class="bdayStory"></div>
+      <div class="introArrow">点击继续 ▶</div>
+    </div>
+
+    <div id="ovBirthdayCard" class="bdayCardScreen hidden">
+      <img id="bdayCardImg" src="assets/birthday-card.jpg" alt="奶蛙生日贺图">
+      <button id="btnBdayNext" class="bdayNext hidden" type="button">下一页</button>
+    </div>
+
+    <div id="ovMenu" class="overlay hidden">
+      <div class="card menuCard">
+        <h1>奶蛙矿工</h1>
+        <div class="frogs"><img src="assets/frog-big.webp" alt="大奶蛙"><img src="assets/frog-small.webp" alt="小奶蛙"></div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:6px;">
+          <button id="btnModeNormal" class="bigbtn" type="button">普通模式</button>
+          <button id="btnModeInf" class="bigbtn" type="button">无限模式</button>
+        </div>
+        <div class="howto">
+          <button id="btnHowto" class="howtoToggle" type="button">玩法说明 ▾</button>
+          <div id="howtoBody" class="howtoBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="ovDiff" class="overlay hidden" style="background:rgba(22,11,3,.82);z-index:30;">
+      <div class="card" style="max-width:420px;text-align:center;">
+        <h1 style="margin-top:0;">选择难度</h1>
+        <p style="color:#ffd98a;margin:0 0 16px;">难度越高，大奶蛙越难缠</p>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <button class="bigbtn diffBtn" data-diff="easy" type="button">简单</button>
+          <button class="bigbtn diffBtn" data-diff="medium" type="button">中等</button>
+          <button class="bigbtn diffBtn" data-diff="hard" type="button">困难</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="ovPause" class="overlay hidden">
+      <div class="card">
+        <h1 style="font-size:28px;">暂停中</h1>
+        <div class="row"><button id="btnResume" class="smallbtn" type="button">继续游戏</button></div>
+      </div>
+    </div>
+
+    <div id="ovSettings" class="overlay hidden">
+      <div class="card setCard">
+        <h1 style="font-size:28px;">设置</h1>
+        <div class="setRow">
+          <div class="setLabel"><span>背景音乐</span><span class="setVal" id="bgmVal">25%</span></div>
+          <input id="bgmRange" type="range" min="0" max="100" step="1" value="10" aria-label="背景音乐音量">
+        </div>
+        <div class="setRow">
+          <div class="setLabel"><span>特效音乐</span><span class="setVal" id="fxVal">100%</span></div>
+          <input id="fxRange" type="range" min="0" max="100" step="1" value="100" aria-label="特效音乐音量">
+        </div>
+        <div class="setDivider"></div>
+        <div class="row"><button id="btnClearData" class="smallbtn danger" type="button">清除数据</button></div>
+        <p class="setWarn">清空所有关卡进度与图鉴收集记录</p>
+        <div class="row"><button id="btnSettingsClose" class="smallbtn" type="button">返回</button></div>
+      </div>
+    </div>
+
+    <div id="ovConfirm" class="overlay hidden">
+      <div class="card setCard">
+        <h1 style="font-size:26px;">确认清除？</h1>
+        <p class="setWarn" style="margin-top:12px;">将清空所有关卡进度、图鉴收集记录与设置，此操作无法撤销。</p>
+        <div class="row">
+          <button id="btnConfirmClear" class="smallbtn danger" type="button">确认清除</button>
+          <button id="btnCancelClear" class="smallbtn" type="button">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="ovClear" class="overlay hidden">
+      <div class="card">
+        <h1 style="font-size:30px;">厂长满意！</h1>
+        <p class="sub" id="clearText">本关累计 $0</p>
+        <div class="row"><button id="btnNext" class="bigbtn" type="button">下一关</button></div>
+      </div>
+    </div>
+
+    <div id="ovOver" class="overlay hidden">
+      <div class="card">
+        <h1 style="font-size:26px;line-height:1.35;">厂长大发雷霆！<br>你输给了狡猾的奶蛙！</h1>
+        <div class="laughBox"></div>
+        <p class="sub" id="overText">还差 $0 没抓够</p>
+        <div class="row">
+          <button id="btnRetry" class="smallbtn" type="button">再试一次</button>
+          <button id="btnMenu" class="smallbtn" type="button">回工厂</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="ovDex" class="overlay hidden">
+      <div class="card" style="max-width:520px;">
+        <h1 style="font-size:26px;">奶蛙图鉴</h1>
+        <p class="sub" id="dexCount">已收集 0 / 11</p>
+        <div class="dexGrid" id="dexGrid"></div>
+        <div class="row"><button id="btnDexClose" class="smallbtn" type="button">返回</button></div>
+      </div>
+    </div>
+
+    <div id="ovRareShow" class="rareShow hidden">
+      <img class="rareImg" id="rareShowImg" src="" alt="">
+      <div class="rareLabel" id="rareShowLabel"></div>
+      <div class="rareTag">稀 有 发 现</div>
+    </div>
+  </div>
+
+  <p class="hint"><kbd>空格</kbd> / 点击画面 / 手指点按 = 放钩　·　再按一次 = 提前收钩　·　
+    <a href="#" id="btnOfficialQq">奶蛙工厂交流群：1125745212</a>　·　<a href="#" id="btnOfficialQq2">奶蛙游戏合集群：1125743992</a>　·　<a href="https://game.0z.hk/" target="_blank" rel="noopener">更多奶蛙游戏</a>
+  </p>
+  <div id="rotateHint" aria-hidden="true">📱 横屏游玩体验更佳</div>
+</div>
+
+<script src="js/vendor/SignalsmithStretch.js"></script>
+<script src="js/data.js?v=5"></script>
+<script src="js/audio.js?v=5"></script>
+<script src="js/game.js?v=5"></script>
+<script src="js/render.js?v=5"></script>
+<script src="js/ninja.js?v=5"></script>
+<script src="js/ui.js?v=5"></script>
+</body>
+</html>

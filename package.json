@@ -1,0 +1,9 @@
+{
+  "name": "frog-miner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "奶蛙工厂 · 奶蛙矿工（网页小游戏，双击 index.html 即玩）",
+  "scripts": {
+    "dev": "node scripts/dev-server.js"
+  }
+}
