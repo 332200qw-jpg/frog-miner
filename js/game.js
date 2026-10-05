@@ -932,7 +932,7 @@ function dropOrRetract(){
 function updateHUD(){
   document.getElementById('score').textContent = '$' + G.score.toLocaleString();
   document.getElementById('target').textContent = '$' + G.target.toLocaleString();
-  document.getElementById('level').textContent = G.mode === 'infinite' ? '∞' + G.level : G.level;
+  document.getElementById('level').textContent = G.mode === 'infinite' ? '∞ ' + G.level : G.level;
   var t = document.getElementById('time');
   t.textContent = Math.max(0, Math.ceil(G.time));
   document.getElementById('timeStat').className = 'stat' + (G.time <= 10 ? ' warn' : '');

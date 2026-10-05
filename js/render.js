@@ -118,6 +118,19 @@ function drawBg(){
 
 function drawHouse(){
   var hx = 490; // 房子固定不动
+  var t = performance.now() / 1000;
+  /* 烟囱 + 炊烟（三团循环上升，淡出） */
+  ctx.fillStyle = '#5d3a20';
+  ctx.fillRect(hx + 34, 22, 14, 26);
+  ctx.fillStyle = '#472a14';
+  ctx.fillRect(hx + 32, 20, 18, 6);
+  for(var p = 0; p < 3; p++){
+    var ph = ((t * 0.32 + p / 3) % 1);
+    var py = 18 - ph * 34;
+    var px = hx + 41 + Math.sin(ph * 5 + p * 2.1) * (3 + ph * 6);
+    ctx.fillStyle = 'rgba(240,235,225,' + (0.34 * (1 - ph)).toFixed(3) + ')';
+    ctx.beginPath(); ctx.arc(px, py, 3.5 + ph * 6, 0, Math.PI * 2); ctx.fill();
+  }
   ctx.fillStyle = '#8a4b22';
   ctx.beginPath(); ctx.moveTo(hx - 72, 66); ctx.lineTo(hx + 72, 66); ctx.lineTo(hx, 38); ctx.closePath(); ctx.fill();
   ctx.fillStyle = '#a05c2a';
@@ -126,7 +139,14 @@ function drawHouse(){
   roundRect(hx - 58, 66, 116, 64, 6); ctx.fill();
   ctx.fillStyle = '#57321a';
   roundRect(hx - 58, 66, 116, 12, 6); ctx.fill();
-  ctx.fillStyle = '#ffe9a0';
+  /* 门 */
+  ctx.fillStyle = '#4a2c14';
+  roundRect(hx - 48, 96, 18, 34, 5); ctx.fill();
+  ctx.fillStyle = '#caa44e';
+  ctx.beginPath(); ctx.arc(hx - 34, 113, 1.8, 0, Math.PI * 2); ctx.fill();
+  /* 窗户：暖光轻微呼吸 */
+  var glow = 0.85 + 0.15 * Math.sin(t * 1.8);
+  ctx.fillStyle = 'rgba(255,233,160,' + glow.toFixed(3) + ')';
   roundRect(hx - 20, 80, 40, 28, 5); ctx.fill();
   ctx.strokeStyle = '#57321a'; ctx.lineWidth = 3;
   ctx.beginPath(); ctx.moveTo(hx, 80); ctx.lineTo(hx, 108); ctx.moveTo(hx - 20, 94); ctx.lineTo(hx + 20, 94); ctx.stroke();
@@ -201,10 +221,26 @@ function drawOdPlane(){
   ctx.beginPath();
   ctx.moveTo(x + 24, y - 4); ctx.lineTo(x + 32, y - 16); ctx.lineTo(x + 38, y - 4);
   ctx.closePath(); ctx.fill(); ctx.stroke();
-  // 螺旋桨
+  // 螺旋桨（旋转）+ 尾迹（向后飘的烟点）
+  var pt = performance.now() / 1000;
+  for(var ti = 0; ti < 3; ti++){
+    var tph = ((pt * 1.6 + ti / 3) % 1);
+    var tpx = x + 36 + tph * 30, tpy = y + 2 + Math.sin(tph * 4 + ti) * 2.5;
+    ctx.fillStyle = 'rgba(220,225,230,' + (0.30 * (1 - tph)).toFixed(3) + ')';
+    ctx.beginPath(); ctx.arc(tpx, tpy, 1.6 + tph * 2.6, 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.save();
+  ctx.translate(x - 42, y);
+  ctx.strokeStyle = 'rgba(90,90,90,0.9)'; ctx.lineWidth = 2.4; ctx.lineCap = 'round';
+  for(var bi = 0; bi < 2; bi++){
+    ctx.save(); ctx.rotate(pt * 28 + bi * Math.PI / 2);
+    ctx.beginPath(); ctx.moveTo(0, -8); ctx.lineTo(0, 8); ctx.stroke();
+    ctx.restore();
+  }
+  ctx.restore();
   ctx.strokeStyle = '#666'; ctx.lineWidth = 2;
   ctx.beginPath(); ctx.moveTo(x - 34, y); ctx.lineTo(x - 42, y); ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(x - 42, y, 2, 8, 0, 0, Math.PI * 2); ctx.fillStyle = '#888'; ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x - 42, y, 2, 8, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(136,136,136,0.5)'; ctx.fill();
   // od 只露上半身（从源图裁上半部分）
   if(IMG.od && IMG.od.complete && IMG.od.naturalWidth > 0){
     var ow = IMG.od.naturalWidth, oh = IMG.od.naturalHeight;
